@@ -14,7 +14,6 @@ jobs:
       REGISTRY: ${{ vars.HARBOR_REGISTRY }}
       PROJECT:  ${{ vars.HARBOR_PROJECT }}
       IMAGE:    kailas-demo
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
