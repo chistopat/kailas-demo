@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEMO SCENE 2000</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #000;
+            font-family: 'Courier New', monospace;
+            overflow: hidden;
+            color: #0f0;
+        }
+        
+        #canvas {
+            display: block;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+        
+        #ascii {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 12px;
+            line-height: 12px;
+            letter-spacing: 2px;
+            white-space: pre;
+            color: #4a9eff;
+            text-shadow: 0 0 10px #4a9eff;
+            pointer-events: none;
+            text-align: center;
+        }
+        
+
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <pre id="ascii"></pre>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const ascii = document.getElementById('ascii');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        let time = 0;
+        
+        // Мягкая плазма
+        function plasma(x, y, t) {
+            const v1 = Math.sin(x * 0.02 + t * 0.5);
+            const v2 = Math.sin(y * 0.02 + t * 0.3);
+            const v3 = Math.sin((x + y) * 0.015 + t * 0.4);
+            return (v1 + v2 + v3) / 3;
+        }
+        
+        // Простой ASCII лого
+        const logo = `
+    ██████╗ ███████╗███╗   ███╗ ██████╗ 
+    ██╔══██╗██╔════╝████╗ ████║██╔═══██╗
+    ██║  ██║█████╗  ██╔████╔██║██║   ██║
+    ██║  ██║██╔══╝  ██║╚██╔╝██║██║   ██║
+    ██████╔╝███████╗██║ ╚═╝ ██║╚██████╔╝
+    ╚═════╝ ╚══════╝╚═╝     ╚═╝ ╚═════╝ 
+        `;
+        
+        let logoOpacity = 0;
+        let logoDirection = 1;
+        
+        function updateASCII() {
+            logoOpacity += 0.01 * logoDirection;
+            if (logoOpacity >= 1) logoDirection = -1;
+            if (logoOpacity <= 0.3) logoDirection = 1;
+            
+            ascii.style.opacity = logoOpacity;
+            ascii.textContent = logo;
+        }
+        
+        // Рисуем мягкий фон
+        function draw() {
+            const w = canvas.width;
+            const h = canvas.height;
+            
+            // Затемнение
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, w, h);
+            
+            // Мягкая плазма крупными пикселями
+            const pixelSize = 8;
+            for (let y = 0; y < h; y += pixelSize) {
+                for (let x = 0; x < w; x += pixelSize) {
+                    const val = plasma(x, y, time * 0.02);
+                    const hue = 200 + val * 60; // Синие тона
+                    const lightness = 20 + (val + 1) * 15;
+                    ctx.fillStyle = `hsl(${hue}, 70%, ${lightness}%)`;
+                    ctx.fillRect(x, y, pixelSize, pixelSize);
+                }
+            }
+            
+            // Мягкие звезды
+            const cx = w / 2;
+            const cy = h / 2;
+            for (let i = 0; i < 30; i++) {
+                const angle = time * 0.01 + i * 0.8;
+                const radius = 150 + Math.sin(time * 0.02 + i) * 50;
+                const x = cx + Math.cos(angle) * radius;
+                const y = cy + Math.sin(angle) * radius;
+                const size = 2 + Math.sin(time * 0.05 + i) * 1;
+                
+                ctx.fillStyle = 'rgba(150, 200, 255, 0.6)';
+                ctx.beginPath();
+                ctx.arc(x, y, size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            // Вертикальные линии
+            ctx.strokeStyle = 'rgba(100, 150, 200, 0.1)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i < 10; i++) {
+                const x = (i / 10) * w + Math.sin(time * 0.02 + i) * 20;
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, h);
+                ctx.stroke();
+            }
+        }
+        
+        function animate() {
+            time++;
+            draw();
+            if (time % 2 === 0) updateASCII();
+            requestAnimationFrame(animate);
+        }
+        
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+        
+        ascii.textContent = logo;
+        animate();
+    </script>
+</body>
+</html>
