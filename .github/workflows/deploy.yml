@@ -11,8 +11,8 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      REGISTRY: ${{ env.HARBOR_REGISTRY }}
-      PROJECT:  ${{ env.HARBOR_PROJECT }}
+      REGISTRY: ${{ vars.HARBOR_REGISTRY }}
+      PROJECT:  ${{ vars.HARBOR_PROJECT }}
       IMAGE:    kailas-demo
 
     steps:
