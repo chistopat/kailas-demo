@@ -24,8 +24,8 @@ jobs:
       - name: Login to Harbor
         uses: docker/login-action@v3
         with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ secrets.HARBOR_USERNAME }}
+          registry: ${{ vars.HARBOR_REGISTRY }}
+          username: ${{ vars.HARBOR_USERNAME }}
           password: ${{ secrets.HARBOR_PASSWORD }}
 
       - name: Build & Push Image
@@ -43,8 +43,8 @@ jobs:
     needs: build
 
     env:
-      REGISTRY: ${{ secrets.HARBOR_REGISTRY }}
-      PROJECT:  ${{ secrets.HARBOR_PROJECT }}
+      REGISTRY: ${{ vars.HARBOR_REGISTRY }}
+      PROJECT:  ${{ vars.HARBOR_PROJECT }}
       IMAGE:    kailas-demo
 
     steps:
