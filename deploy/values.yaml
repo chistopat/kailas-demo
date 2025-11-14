@@ -32,3 +32,5 @@ ingress:
         - demo.kailas.cloud
 
 resources: {}
+
+fullnameOverride: kailas-demo
