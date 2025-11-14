@@ -9,7 +9,7 @@ replicaCount: 1
 image:
   repository: harbor.kailas.cloud/demo/kailas-demo
   tag: "latest"
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 imagePullSecrets:
   - name: harbor-demo-regcred
