@@ -2,4 +2,4 @@ FROM nginx:alpine
 
 COPY demo.html /usr/share/nginx/html/index.html
 
-EXPOSE 8080
+EXPOSE 80
