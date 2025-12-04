@@ -53,11 +53,12 @@ jobs:
         with:
           kustomize-version: "5.4.2"
 
-      - name: Configure kubeconfig
+      - name: Write kubeconfig
         run: |
-          echo "${{ secrets.KUBECONFIG }}" > kubeconfig
+          echo "${{ secrets.K8S_CONFIG_B64 }}" | base64 --decode > kubeconfig
           chmod 600 kubeconfig
           echo "KUBECONFIG=$PWD/kubeconfig" >> $GITHUB_ENV
+
 
       - name: Apply kustomization
         working-directory: ${{ env.KUSTOMIZE_DIR }}
