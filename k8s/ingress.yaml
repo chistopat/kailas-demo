@@ -3,10 +3,12 @@ kind: Ingress
 metadata:
   name: demo-ingress
   namespace: demo
-  annotations:
-    kubernetes.io/ingress.class: "traefik"
 spec:
   ingressClassName: traefik
+  tls:
+    - hosts:
+        - demo.kailas.cloud
+      secretName: kailas-cloud-tls
   rules:
     - host: demo.kailas.cloud
       http:
