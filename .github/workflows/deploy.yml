@@ -64,3 +64,7 @@ jobs:
         working-directory: ${{ env.KUSTOMIZE_DIR }}
         run: |
           kustomize build . | kubectl apply -f -
+
+      - name: Force rollout
+        run: |
+          kubectl set image deployment/your-deploy-name your-container=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
