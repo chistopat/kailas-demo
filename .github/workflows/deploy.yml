@@ -2,16 +2,14 @@ name: Release & deploy to kailas
 
 on:
   push:
-    tags:
-      - "v*.*.*"   # v1.0.0, v0.1.3 и т.п.
+    branches:
+      - master
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}     # owner/repo
-  IMAGE_TAG: ${{ github.ref_name }}        # v1.2.3
+  IMAGE_NAME: ${{ github.repository }}
+  IMAGE_TAG: ${{ github.ref_name }}
   KUSTOMIZE_DIR: k8s
-  # имя образа из kustomization.yaml, слева от =
-  # например если там "images: - name: ghcr.io/owner/repo"
   KUSTOMIZE_IMAGE_NAME: ghcr.io/${{ github.repository }}
 
 permissions:
