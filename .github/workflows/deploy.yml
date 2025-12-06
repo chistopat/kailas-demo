@@ -75,3 +75,15 @@ jobs:
         with:
           tag_name: ${{ steps.bump.outputs.next_tag }}
           generate_release_notes: true
+
+      - name: Update image in kustomize
+        run: |
+          cd ${{ env.KUSTOMIZE_DIR }}
+          kustomize edit set image ${{ env.KUSTOMIZE_IMAGE_NAME }}=${{ env.KUSTOMIZE_IMAGE_NAME }}:${{ steps.bump.outputs.next_tag }}
+
+      - name: Apply manifests to cluster
+        env:
+          KUBECONFIG: ${{ secrets.KUBECONFIG }}
+        run: |
+          kubectl apply -k ${{ env.KUSTOMIZE_DIR }}
+          kubectl rollout status deploy/demo -n demo
